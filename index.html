@@ -8,456 +8,788 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Ritual Matutino">
     <title>Ritual Matutino - El Equilibrio del Arquitecto Visionario</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            overscroll-behavior: none;
-            -webkit-overflow-scrolling: touch;
+            padding: 0;
+            box-sizing: border-box;
         }
-    </style>
-</head>
-<body>
-    <div id="root"></div>
 
 ```
-<script type="text/babel">
-    const { useState, useEffect } = React;
-    const { Play, Pause, RotateCcw, CheckCircle, Sun, Brain, Lightbulb, Heart, Star } = lucide;
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #312e81, #7c3aed, #ec4899);
+        color: white;
+        min-height: 100vh;
+        overscroll-behavior: none;
+    }
+    
+    .container {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+    
+    .header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.25rem;
+        opacity: 0.8;
+    }
+    
+    .progress-container {
+        margin-top: 1rem;
+    }
+    
+    .progress-bar {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 9999px;
+        height: 1rem;
+        width: 100%;
+        max-width: 24rem;
+        margin: 0 auto;
+    }
+    
+    .progress-fill {
+        background: linear-gradient(to right, #fbbf24, #f97316);
+        height: 100%;
+        border-radius: 9999px;
+        transition: width 0.5s ease;
+    }
+    
+    .progress-text {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        opacity: 0.7;
+    }
+    
+    .phases-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    @media (min-width: 640px) {
+        .phases-grid {
+            grid-template-columns: repeat(5, 1fr);
+        }
+    }
+    
+    .phase-button {
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        text-align: center;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+    
+    .phase-button:hover {
+        transform: scale(1.05);
+    }
+    
+    .phase-active {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        transform: scale(1.05);
+    }
+    
+    .phase-completed {
+        background: rgba(34, 197, 94, 0.5);
+    }
+    
+    .phase-inactive {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .phase-orange { background: #f97316; }
+    .phase-blue { background: #3b82f6; }
+    .phase-yellow { background: #eab308; }
+    .phase-red { background: #ef4444; }
+    .phase-purple { background: #a855f7; }
+    
+    .main-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(16px);
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .phase-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .phase-icon {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1.5rem;
+    }
+    
+    .phase-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    .phase-subtitle {
+        opacity: 0.7;
+    }
+    
+    .step-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+    }
+    
+    .step-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .step-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+    
+    .timer-display {
+        font-size: 2rem;
+        font-family: monospace;
+        text-align: center;
+    }
+    
+    .step-content {
+        margin-bottom: 1.5rem;
+    }
+    
+    .step-text {
+        font-size: 1.125rem;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+    
+    .info-box {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .info-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .info-text {
+        font-size: 0.875rem;
+        opacity: 0.8;
+    }
+    
+    .question-box {
+        background: rgba(59, 130, 246, 0.2);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .affirmation-box {
+        background: rgba(168, 85, 247, 0.2);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .declaration-box {
+        background: linear-gradient(to right, rgba(168, 85, 247, 0.3), rgba(236, 72, 153, 0.3));
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    
+    .declaration-text {
+        font-size: 1.25rem;
+        font-weight: bold;
+        font-style: italic;
+    }
+    
+    .input-field {
+        width: 100%;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        margin-bottom: 1.5rem;
+        font-family: inherit;
+    }
+    
+    .input-field::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .range-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .range-input {
+        flex: 1;
+    }
+    
+    .range-value {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.25rem;
+    }
+    
+    .controls {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+        color: white;
+        font-size: 0.875rem;
+    }
+    
+    .btn:hover:not(:disabled) {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+    
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .btn-green { background: #16a34a; }
+    .btn-yellow { background: #ca8a04; }
+    .btn-red { background: #dc2626; }
+    .btn-blue { background: #2563eb; }
+    
+    .step-progress {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .step-dot {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        transition: all 0.3s;
+    }
+    
+    .summary-card {
+        background: linear-gradient(to right, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2));
+        backdrop-filter: blur(16px);
+        border-radius: 1rem;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .summary-grid {
+        display: grid;
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    @media (min-width: 768px) {
+        .summary-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    .summary-item h4 {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .summary-item p {
+        opacity: 0.8;
+        font-size: 0.875rem;
+    }
+</style>
+```
 
-    function RitualApp() {
-        const [currentPhase, setCurrentPhase] = useState(0);
-        const [currentStep, setCurrentStep] = useState(0);
-        const [timer, setTimer] = useState(0);
-        const [isActive, setIsActive] = useState(false);
-        const [completed, setCompleted] = useState([false, false, false, false, false]);
-        const [intentions, setIntentions] = useState({
-            vision: '',
-            keyIdea: '',
-            emotionalLevel: 5,
-            intention: ''
-        });
-
-        const phases = [
-            {
-                title: "Conexión",
-                icon: Sun,
-                color: "bg-orange-500",
-                steps: [
-                    {
-                        title: "Respiración 4-7-8",
-                        duration: 180,
-                        text: "Inhala 4 segundos, sostén 7, exhala 8. Tu naturaleza intensa (Luna-Plutón) necesita este anclaje.",
-                        guidance: "Con cada exhalación, liberas la tensión acumulada. Repite 3 ciclos completos."
-                    },
-                    {
-                        title: "Afirmación de Propósito",
-                        duration: 120,
-                        text: "Tu Maximizer puede llevarte al perfeccionismo paralizante. Esta afirmación programa tu mente para la acción.",
-                        affirmation: "Hoy elijo claridad sobre complejidad, progreso sobre perfección"
-                    }
-                ]
-            },
-            {
-                title: "Claridad",
-                icon: Brain,
-                color: "bg-blue-500",
-                steps: [
-                    {
-                        title: "Nivel Estratégico",
-                        duration: 120,
-                        text: "Tu Strategic necesita esta visión macro antes de los detalles.",
-                        question: "¿Qué quiero que sea diferente al final de hoy?",
-                        input: "vision"
-                    },
-                    {
-                        title: "Pregunta Clave del Día",
-                        duration: 180,
-                        text: "Esta pregunta combate tu tendencia a la dispersión mental (Ideation + Strategic).",
-                        question: "¿Qué es lo MÁS IMPORTANTE que debe suceder hoy para mover la aguja?"
-                    }
-                ]
-            },
-            {
-                title: "Ideas",
-                icon: Lightbulb,
-                color: "bg-yellow-500",
-                steps: [
-                    {
-                        title: "Brain Dump",
-                        duration: 180,
-                        text: "Tu Ideation genera conexiones constantes que pueden abrumar. Este ejercicio libera RAM mental.",
-                        guidance: "¿Qué ideas rondan mi cabeza desde ayer? ¿Qué preocupaciones consumen energía mental?"
-                    },
-                    {
-                        title: "Traducción Simple",
-                        duration: 120,
-                        text: "Ideation + Strategic generan ideas complejas que otros no pueden seguir. Practica la simplicidad radical.",
-                        question: "Si tuviera que explicar mi idea más importante a un niño de 10 años, ¿cómo la diría?",
-                        input: "keyIdea"
-                    }
-                ]
-            },
-            {
-                title: "Emocional",
-                icon: Heart,
-                color: "bg-red-500",
-                steps: [
-                    {
-                        title: "Termómetro de Intensidad",
-                        duration: 60,
-                        text: "Tu Venus en Escorpio puede llevarte a extremos emocionales. Este check-in te ayuda a modular tu intensidad.",
-                        scale: "1-3: Baja energía | 4-6: Zona óptima | 7-10: Alta intensidad",
-                        input: "emotionalLevel"
-                    },
-                    {
-                        title: "Intención Relacional",
-                        duration: 120,
-                        text: "Tu Relator + Venus en Escorpio crean conexiones intensas. Define cómo quieres mostrar up en las relaciones hoy.",
-                        question: "¿Qué energía quiero que otros sientan cuando interactúan conmigo?",
-                        input: "intention"
-                    }
-                ]
-            },
-            {
-                title: "Activación",
-                icon: Star,
-                color: "bg-purple-500",
-                steps: [
-                    {
-                        title: "Visualización de Impacto",
-                        duration: 90,
-                        text: "Tu Nodo Norte en Tauro Casa 6 te pide crear valor tangible y servir a otros.",
-                        visualization: "Te ves al final del día, sonriendo por el valor tangible que creaste. Tu equipo se siente inspirado y claro gracias a tu liderazgo."
-                    },
-                    {
-                        title: "Declaración de Poder",
-                        duration: 90,
-                        text: "Esta declaración activa tu Self-Assurance y conecta con tu misión más profunda. Dilo con convicción total.",
-                        declaration: "Soy un líder que transforma visiones en realidades"
-                    }
-                ]
-            }
-        ];
-
-        useEffect(() => {
-            let interval = null;
-            if (isActive && timer > 0) {
-                interval = setInterval(() => {
-                    setTimer(timer => timer - 1);
-                }, 1000);
-            } else if (timer === 0 && isActive) {
-                setIsActive(false);
-                const newCompleted = [...completed];
-                newCompleted[currentPhase] = true;
-                setCompleted(newCompleted);
-            }
-            return () => clearInterval(interval);
-        }, [isActive, timer, currentPhase, completed]);
-
-        const startTimer = () => {
-            if (timer === 0) {
-                setTimer(phases[currentPhase].steps[currentStep].duration);
-            }
-            setIsActive(true);
-        };
-
-        const pauseTimer = () => setIsActive(false);
-        const resetTimer = () => {
-            setIsActive(false);
-            setTimer(phases[currentPhase].steps[currentStep].duration);
-        };
-
-        const formatTime = (seconds) => {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        };
-
-        const nextStep = () => {
-            if (currentStep < phases[currentPhase].steps.length - 1) {
-                setCurrentStep(currentStep + 1);
-            } else if (currentPhase < phases.length - 1) {
-                setCurrentPhase(currentPhase + 1);
-                setCurrentStep(0);
-            }
-            setTimer(0);
-            setIsActive(false);
-        };
-
-        const goToPhase = (index) => {
-            setCurrentPhase(index);
-            setCurrentStep(0);
-            setTimer(0);
-            setIsActive(false);
-        };
-
-        const handleInputChange = (field, value) => {
-            setIntentions({...intentions, [field]: value});
-        };
-
-        const IconComponent = phases[currentPhase].icon;
-        const completedCount = completed.filter(Boolean).length;
-        const currentStepData = phases[currentPhase].steps[currentStep];
-
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 text-white">
-                <div className="container mx-auto p-3 sm:p-6 max-w-4xl">
-                    {/* Header */}
-                    <div className="text-center mb-6 sm:mb-8">
-                        <h1 className="text-2xl sm:text-3xl font-bold mb-2">El Equilibrio del Arquitecto Visionario</h1>
-                        <p className="text-lg sm:text-xl opacity-80">Tu Ritual Matutino Personalizado</p>
-                        <div className="mt-4">
-                            <div className="bg-white/20 rounded-full h-4 w-full max-w-md mx-auto">
-                                <div 
-                                    className="bg-gradient-to-r from-yellow-400 to-orange-500 h-4 rounded-full transition-all duration-500"
-                                    style={{width: `${(completedCount / phases.length) * 100}%`}}
-                                />
-                            </div>
-                            <p className="mt-2 text-sm opacity-70">{completedCount}/5 fases completadas</p>
-                        </div>
-                    </div>
-
-                    {/* Phase Navigation */}
-                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-6 sm:mb-8">
-                        {phases.map((phase, index) => {
-                            const PhaseIcon = phase.icon;
-                            return (
-                                <button
-                                    key={index}
-                                    onClick={() => goToPhase(index)}
-                                    className={`p-2 sm:p-3 rounded-lg text-center transition-all duration-200 ${
-                                        currentPhase === index 
-                                            ? `${phase.color} shadow-lg scale-105` 
-                                            : completed[index]
-                                                ? 'bg-green-600/50 hover:bg-green-600/70'
-                                                : 'bg-white/10 hover:bg-white/20'
-                                    }`}
-                                >
-                                    <div className="flex justify-center mb-1">
-                                        {completed[index] ? (
-                                            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                                        ) : (
-                                            <PhaseIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                                        )}
-                                    </div>
-                                    <div className="text-xs font-medium">{phase.title}</div>
-                                </button>
-                            );
-                        })}
-                    </div>
-
-                    {/* Current Phase */}
-                    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-8 mb-4 sm:mb-6">
-                        <div className="flex items-center mb-4 sm:mb-6">
-                            <div className={`p-2 sm:p-3 rounded-full ${phases[currentPhase].color} mr-3 sm:mr-4`}>
-                                <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </div>
-                            <div>
-                                <h2 className="text-xl sm:text-2xl font-bold">{phases[currentPhase].title}</h2>
-                                <p className="opacity-70">Fase {currentPhase + 1} de 5</p>
-                            </div>
-                        </div>
-
-                        {/* Current Step */}
-                        <div className="bg-white/5 rounded-xl p-4 sm:p-6">
-                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
-                                <h3 className="text-lg sm:text-xl font-semibold">
-                                    {currentStepData.title}
-                                </h3>
-                                <div className="text-2xl sm:text-3xl font-mono text-center sm:text-right">
-                                    {formatTime(timer || currentStepData.duration)}
-                                </div>
-                            </div>
-
-                            <div className="mb-4 sm:mb-6">
-                                <p className="text-base sm:text-lg mb-4 opacity-90">
-                                    {currentStepData.text}
-                                </p>
-
-                                {currentStepData.guidance && (
-                                    <div className="bg-white/5 rounded-lg p-4 mb-4">
-                                        <h5 className="font-semibold text-yellow-300 mb-2">💡 Contexto:</h5>
-                                        <p className="text-sm opacity-80">{currentStepData.guidance}</p>
-                                    </div>
-                                )}
-
-                                {currentStepData.question && (
-                                    <div className="bg-blue-500/20 rounded-lg p-4 mb-4">
-                                        <h5 className="font-semibold text-blue-300 mb-2">🎯 Pregunta Clave:</h5>
-                                        <p className="text-lg font-medium">{currentStepData.question}</p>
-                                    </div>
-                                )}
-
-                                {currentStepData.affirmation && (
-                                    <div className="bg-purple-500/20 rounded-lg p-4 mb-4">
-                                        <h5 className="font-semibold text-purple-300 mb-2">✨ Afirmación:</h5>
-                                        <p className="text-lg font-medium italic">"{currentStepData.affirmation}"</p>
-                                    </div>
-                                )}
-
-                                {currentStepData.declaration && (
-                                    <div className="bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-lg p-4 mb-4">
-                                        <h5 className="font-semibold text-purple-300 mb-2">👑 Declaración:</h5>
-                                        <p className="text-lg sm:text-xl font-bold italic text-center">"{currentStepData.declaration}"</p>
-                                    </div>
-                                )}
-
-                                {currentStepData.visualization && (
-                                    <div className="bg-white/5 rounded-lg p-4 mb-4">
-                                        <h5 className="font-semibold text-purple-300 mb-2">🎬 Visualización:</h5>
-                                        <p className="text-sm opacity-80">{currentStepData.visualization}</p>
-                                    </div>
-                                )}
-
-                                {currentStepData.scale && (
-                                    <div className="bg-white/5 rounded-lg p-4 mb-4">
-                                        <h5 className="font-semibold text-indigo-300 mb-2">📊 Interpretación:</h5>
-                                        <p className="text-sm opacity-80">{currentStepData.scale}</p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Input Fields */}
-                            {currentStepData.input && (
-                                <div className="mb-6">
-                                    {currentStepData.input === 'vision' && (
-                                        <textarea
-                                            placeholder="Escribe tu visión del día..."
-                                            className="w-full p-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50"
-                                            value={intentions.vision}
-                                            onChange={(e) => handleInputChange('vision', e.target.value)}
-                                        />
-                                    )}
-
-                                    {currentStepData.input === 'keyIdea' && (
-                                        <textarea
-                                            placeholder="Tu idea en lenguaje simple..."
-                                            className="w-full p-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50"
-                                            value={intentions.keyIdea}
-                                            onChange={(e) => handleInputChange('keyIdea', e.target.value)}
-                                        />
-                                    )}
-
-                                    {currentStepData.input === 'emotionalLevel' && (
-                                        <div className="flex items-center space-x-4">
-                                            <span>Bajo (1)</span>
-                                            <input
-                                                type="range"
-                                                min="1"
-                                                max="10"
-                                                className="flex-1"
-                                                value={intentions.emotionalLevel}
-                                                onChange={(e) => handleInputChange('emotionalLevel', parseInt(e.target.value))}
-                                            />
-                                            <span>Alto (10)</span>
-                                            <div className="bg-white/20 px-3 py-1 rounded">
-                                                {intentions.emotionalLevel}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {currentStepData.input === 'intention' && (
-                                        <textarea
-                                            placeholder="Mi intención relacional..."
-                                            className="w-full p-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50"
-                                            value={intentions.intention}
-                                            onChange={(e) => handleInputChange('intention', e.target.value)}
-                                        />
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Timer Controls */}
-                            <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
-                                <button
-                                    onClick={startTimer}
-                                    disabled={isActive}
-                                    className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
-                                >
-                                    <Play className="w-4 h-4 sm:w-5 sm:h-5" />
-                                    <span>Iniciar</span>
-                                </button>
-                                
-                                <button
-                                    onClick={pauseTimer}
-                                    disabled={!isActive}
-                                    className="flex items-center space-x-2 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
-                                >
-                                    <Pause className="w-4 h-4 sm:w-5 sm:h-5" />
-                                    <span>Pausar</span>
-                                </button>
-                                
-                                <button
-                                    onClick={resetTimer}
-                                    className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
-                                >
-                                    <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
-                                    <span>Reset</span>
-                                </button>
-
-                                <button
-                                    onClick={nextStep}
-                                    className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
-                                >
-                                    <span>Siguiente</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Step Progress */}
-                        <div className="mt-6 flex justify-center space-x-2">
-                            {phases[currentPhase].steps.map((_, index) => (
-                                <div
-                                    key={index}
-                                    className={`w-3 h-3 rounded-full transition-colors ${
-                                        index === currentStep 
-                                            ? phases[currentPhase].color 
-                                            : index < currentStep ? 'bg-green-500' : 'bg-white/20'
-                                    }`}
-                                />
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Summary */}
-                    {completedCount === phases.length && (
-                        <div className="bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-lg rounded-2xl p-4 sm:p-8">
-                            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">🎉 ¡Ritual Completado!</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                                <div>
-                                    <h4 className="font-semibold mb-2">Tu Visión del Día:</h4>
-                                    <p className="opacity-80 text-sm sm:text-base">{intentions.vision || 'No definida'}</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold mb-2">Idea Clave:</h4>
-                                    <p className="opacity-80 text-sm sm:text-base">{intentions.keyIdea || 'No definida'}</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold mb-2">Nivel Emocional:</h4>
-                                    <p className="opacity-80 text-sm sm:text-base">{intentions.emotionalLevel}/10</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold mb-2">Intención Relacional:</h4>
-                                    <p className="opacity-80 text-sm sm:text-base">{intentions.intention || 'No definida'}</p>
-                                </div>
-                            </div>
-                            <div className="text-center mt-6">
-                                <p className="text-base sm:text-lg font-semibold">¡Que tengas un día extraordinario, Javier!</p>
-                            </div>
-                        </div>
-                    )}
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="title">El Equilibrio del Arquitecto Visionario</h1>
+            <p class="subtitle">Tu Ritual Matutino Personalizado</p>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
                 </div>
+                <p class="progress-text"><span id="completedCount">0</span>/5 fases completadas</p>
             </div>
-        );
+        </div>
+
+```
+    <!-- Phase Navigation -->
+    <div class="phases-grid" id="phasesGrid"></div>
+
+    <!-- Main Card -->
+    <div class="main-card">
+        <div class="phase-header">
+            <div class="phase-icon" id="currentPhaseIcon"></div>
+            <div>
+                <h2 class="phase-title" id="currentPhaseTitle"></h2>
+                <p class="phase-subtitle" id="currentPhaseSubtitle"></p>
+            </div>
+        </div>
+
+        <!-- Step Card -->
+        <div class="step-card">
+            <div class="step-header">
+                <h3 class="step-title" id="stepTitle"></h3>
+                <div class="timer-display" id="timerDisplay">0:00</div>
+            </div>
+
+            <div class="step-content" id="stepContent"></div>
+            <div id="inputContainer"></div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button class="btn btn-green" id="startBtn">▶ Iniciar</button>
+                <button class="btn btn-yellow" id="pauseBtn" disabled>⏸ Pausar</button>
+                <button class="btn btn-red" id="resetBtn">⟲ Reset</button>
+                <button class="btn btn-blue" id="nextBtn">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Step Progress -->
+        <div class="step-progress" id="stepProgress"></div>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-card" id="summaryCard" style="display: none;">
+        <h3 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">¡Ritual Completado!</h3>
+        <div class="summary-grid" id="summaryGrid"></div>
+        <div style="margin-top: 1.5rem;">
+            <p style="font-size: 1.125rem; font-weight: 600;">¡Que tengas un día extraordinario, Javier!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // State
+    let currentPhase = 0;
+    let currentStep = 0;
+    let timer = 0;
+    let isActive = false;
+    let interval = null;
+    let completed = [false, false, false, false, false];
+    let intentions = {
+        vision: '',
+        keyIdea: '',
+        emotionalLevel: 5,
+        intention: ''
+    };
+
+    // Data
+    const phases = [
+        {
+            title: "Conexión",
+            icon: "☀️",
+            color: "phase-orange",
+            steps: [
+                {
+                    title: "Respiración 4-7-8",
+                    duration: 180,
+                    text: "Inhala 4 segundos, sostén 7, exhala 8. Tu naturaleza intensa (Luna-Plutón) necesita este anclaje.",
+                    guidance: "Con cada exhalación, liberas la tensión acumulada. Repite 3 ciclos completos."
+                },
+                {
+                    title: "Afirmación de Propósito",
+                    duration: 120,
+                    text: "Tu Maximizer puede llevarte al perfeccionismo paralizante. Esta afirmación programa tu mente para la acción.",
+                    affirmation: "Hoy elijo claridad sobre complejidad, progreso sobre perfección"
+                }
+            ]
+        },
+        {
+            title: "Claridad",
+            icon: "🧠",
+            color: "phase-blue",
+            steps: [
+                {
+                    title: "Nivel Estratégico",
+                    duration: 120,
+                    text: "Tu Strategic necesita esta visión macro antes de los detalles.",
+                    question: "¿Qué quiero que sea diferente al final de hoy?",
+                    input: "vision"
+                },
+                {
+                    title: "Pregunta Clave del Día",
+                    duration: 180,
+                    text: "Esta pregunta combate tu tendencia a la dispersión mental (Ideation + Strategic).",
+                    question: "¿Qué es lo MÁS IMPORTANTE que debe suceder hoy para mover la aguja?"
+                }
+            ]
+        },
+        {
+            title: "Ideas",
+            icon: "💡",
+            color: "phase-yellow",
+            steps: [
+                {
+                    title: "Brain Dump",
+                    duration: 180,
+                    text: "Tu Ideation genera conexiones constantes que pueden abrumar. Este ejercicio libera RAM mental.",
+                    guidance: "¿Qué ideas rondan mi cabeza desde ayer? ¿Qué preocupaciones consumen energía mental?"
+                },
+                {
+                    title: "Traducción Simple",
+                    duration: 120,
+                    text: "Ideation + Strategic generan ideas complejas que otros no pueden seguir. Practica la simplicidad radical.",
+                    question: "Si tuviera que explicar mi idea más importante a un niño de 10 años, ¿cómo la diría?",
+                    input: "keyIdea"
+                }
+            ]
+        },
+        {
+            title: "Emocional",
+            icon: "❤️",
+            color: "phase-red",
+            steps: [
+                {
+                    title: "Termómetro de Intensidad",
+                    duration: 60,
+                    text: "Tu Venus en Escorpio puede llevarte a extremos emocionales. Este check-in te ayuda a modular tu intensidad.",
+                    scale: "1-3: Baja energía | 4-6: Zona óptima | 7-10: Alta intensidad",
+                    input: "emotionalLevel"
+                },
+                {
+                    title: "Intención Relacional",
+                    duration: 120,
+                    text: "Tu Relator + Venus en Escorpio crean conexiones intensas. Define cómo quieres mostrar up en las relaciones hoy.",
+                    question: "¿Qué energía quiero que otros sientan cuando interactúan conmigo?",
+                    input: "intention"
+                }
+            ]
+        },
+        {
+            title: "Activación",
+            icon: "⭐",
+            color: "phase-purple",
+            steps: [
+                {
+                    title: "Visualización de Impacto",
+                    duration: 90,
+                    text: "Tu Nodo Norte en Tauro Casa 6 te pide crear valor tangible y servir a otros.",
+                    visualization: "Te ves al final del día, sonriendo por el valor tangible que creaste. Tu equipo se siente inspirado y claro gracias a tu liderazgo."
+                },
+                {
+                    title: "Declaración de Poder",
+                    duration: 90,
+                    text: "Esta declaración activa tu Self-Assurance y conecta con tu misión más profunda. Dilo con convicción total.",
+                    declaration: "Soy un líder que transforma visiones en realidades"
+                }
+            ]
+        }
+    ];
+
+    // Timer functions
+    function startTimer() {
+        if (timer === 0) {
+            timer = phases[currentPhase].steps[currentStep].duration;
+        }
+        isActive = true;
+        updateButtons();
+        
+        interval = setInterval(() => {
+            timer--;
+            updateTimerDisplay();
+            
+            if (timer <= 0) {
+                pauseTimer();
+                completed[currentPhase] = true;
+                updateProgress();
+                updatePhasesGrid();
+            }
+        }, 1000);
     }
 
-    ReactDOM.render(<RitualApp />, document.getElementById('root'));
+    function pauseTimer() {
+        isActive = false;
+        clearInterval(interval);
+        updateButtons();
+    }
+
+    function resetTimer() {
+        pauseTimer();
+        timer = phases[currentPhase].steps[currentStep].duration;
+        updateTimerDisplay();
+    }
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function updateTimerDisplay() {
+        document.getElementById('timerDisplay').textContent = formatTime(timer);
+    }
+
+    function updateButtons() {
+        document.getElementById('startBtn').disabled = isActive;
+        document.getElementById('pauseBtn').disabled = !isActive;
+    }
+
+    // Navigation functions
+    function goToPhase(index) {
+        currentPhase = index;
+        currentStep = 0;
+        pauseTimer();
+        timer = 0;
+        updateAll();
+    }
+
+    function nextStep() {
+        if (currentStep < phases[currentPhase].steps.length - 1) {
+            currentStep++;
+        } else if (currentPhase < phases.length - 1) {
+            currentPhase++;
+            currentStep = 0;
+        }
+        pauseTimer();
+        timer = 0;
+        updateAll();
+    }
+
+    // Input handling
+    function handleInputChange(field, value) {
+        intentions[field] = value;
+    }
+
+    // Update functions
+    function updateProgress() {
+        const completedCount = completed.filter(Boolean).length;
+        const progress = (completedCount / phases.length) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+        document.getElementById('completedCount').textContent = completedCount;
+        
+        if (completedCount === phases.length) {
+            document.getElementById('summaryCard').style.display = 'block';
+            updateSummary();
+        }
+    }
+
+    function updatePhasesGrid() {
+        const grid = document.getElementById('phasesGrid');
+        grid.innerHTML = '';
+        
+        phases.forEach((phase, index) => {
+            const button = document.createElement('button');
+            button.className = `phase-button ${
+                currentPhase === index ? `${phase.color} phase-active` :
+                completed[index] ? 'phase-completed' : 'phase-inactive'
+            }`;
+            button.onclick = () => goToPhase(index);
+            button.innerHTML = `
+                <div style="margin-bottom: 0.25rem;">${completed[index] ? '✓' : phase.icon}</div>
+                <div>${phase.title}</div>
+            `;
+            grid.appendChild(button);
+        });
+    }
+
+    function updatePhaseHeader() {
+        const phase = phases[currentPhase];
+        document.getElementById('currentPhaseIcon').className = `phase-icon ${phase.color}`;
+        document.getElementById('currentPhaseIcon').textContent = phase.icon;
+        document.getElementById('currentPhaseTitle').textContent = phase.title;
+        document.getElementById('currentPhaseSubtitle').textContent = `Fase ${currentPhase + 1} de 5`;
+    }
+
+    function updateStepContent() {
+        const step = phases[currentPhase].steps[currentStep];
+        document.getElementById('stepTitle').textContent = step.title;
+        timer = step.duration;
+        updateTimerDisplay();
+        
+        let contentHTML = `<p class="step-text">${step.text}</p>`;
+        
+        if (step.guidance) {
+            contentHTML += `
+                <div class="info-box">
+                    <div class="info-title">💡 Contexto:</div>
+                    <div class="info-text">${step.guidance}</div>
+                </div>
+            `;
+        }
+        
+        if (step.question) {
+            contentHTML += `
+                <div class="question-box">
+                    <div class="info-title" style="color: #93c5fd;">🎯 Pregunta Clave:</div>
+                    <div style="font-size: 1.125rem; font-weight: 500;">${step.question}</div>
+                </div>
+            `;
+        }
+        
+        if (step.affirmation) {
+            contentHTML += `
+                <div class="affirmation-box">
+                    <div class="info-title" style="color: #c4b5fd;">✨ Afirmación:</div>
+                    <div style="font-size: 1.125rem; font-weight: 500; font-style: italic;">"${step.affirmation}"</div>
+                </div>
+            `;
+        }
+        
+        if (step.declaration) {
+            contentHTML += `
+                <div class="declaration-box">
+                    <div class="info-title" style="color: #c4b5fd;">👑 Declaración:</div>
+                    <div class="declaration-text">"${step.declaration}"</div>
+                </div>
+            `;
+        }
+        
+        if (step.visualization) {
+            contentHTML += `
+                <div class="info-box">
+                    <div class="info-title" style="color: #c4b5fd;">🎬 Visualización:</div>
+                    <div class="info-text">${step.visualization}</div>
+                </div>
+            `;
+        }
+        
+        if (step.scale) {
+            contentHTML += `
+                <div class="info-box">
+                    <div class="info-title" style="color: #a5b4fc;">📊 Interpretación:</div>
+                    <div class="info-text">${step.scale}</div>
+                </div>
+            `;
+        }
+        
+        document.getElementById('stepContent').innerHTML = contentHTML;
+        
+        // Handle inputs
+        const inputContainer = document.getElementById('inputContainer');
+        inputContainer.innerHTML = '';
+        
+        if (step.input) {
+            if (step.input === 'emotionalLevel') {
+                inputContainer.innerHTML = `
+                    <div class="range-container">
+                        <span>Bajo (1)</span>
+                        <input type="range" min="1" max="10" value="${intentions.emotionalLevel}" 
+                               class="range-input" onchange="handleInputChange('emotionalLevel', parseInt(this.value))">
+                        <span>Alto (10)</span>
+                        <div class="range-value">${intentions.emotionalLevel}</div>
+                    </div>
+                `;
+            } else {
+                const placeholder = step.input === 'vision' ? 'Escribe tu visión del día...' :
+                                 step.input === 'keyIdea' ? 'Tu idea en lenguaje simple...' :
+                                 'Mi intención relacional...';
+                inputContainer.innerHTML = `
+                    <textarea class="input-field" placeholder="${placeholder}" 
+                              onchange="handleInputChange('${step.input}', this.value)"
+                              style="min-height: 80px;">${intentions[step.input] || ''}</textarea>
+                `;
+            }
+        }
+    }
+
+    function updateStepProgress() {
+        const progressContainer = document.getElementById('stepProgress');
+        progressContainer.innerHTML = '';
+        
+        phases[currentPhase].steps.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = `step-dot ${
+                index === currentStep ? phases[currentPhase].color :
+                index < currentStep ? 'phase-completed' : 'phase-inactive'
+            }`;
+            dot.style.background = index === currentStep ? '' :
+                                 index < currentStep ? '#22c55e' : 'rgba(255, 255, 255, 0.2)';
+            progressContainer.appendChild(dot);
+        });
+    }
+
+    function updateSummary() {
+        const grid = document.getElementById('summaryGrid');
+        grid.innerHTML = `
+            <div class="summary-item">
+                <h4>Tu Visión del Día:</h4>
+                <p>${intentions.vision || 'No definida'}</p>
+            </div>
+            <div class="summary-item">
+                <h4>Idea Clave:</h4>
+                <p>${intentions.keyIdea || 'No definida'}</p>
+            </div>
+            <div class="summary-item">
+                <h4>Nivel Emocional:</h4>
+                <p>${intentions.emotionalLevel}/10</p>
+            </div>
+            <div class="summary-item">
+                <h4>Intención Relacional:</h4>
+                <p>${intentions.intention || 'No definida'}</p>
+            </div>
+        `;
+    }
+
+    function updateAll() {
+        updateProgress();
+        updatePhasesGrid();
+        updatePhaseHeader();
+        updateStepContent();
+        updateStepProgress();
+        updateButtons();
+    }
+
+    // Event listeners
+    document.getElementById('startBtn').onclick = startTimer;
+    document.getElementById('pauseBtn').onclick = pauseTimer;
+    document.getElementById('resetBtn').onclick = resetTimer;
+    document.getElementById('nextBtn').onclick = nextStep;
+
+    // Initialize
+    updateAll();
 </script>
 ```
 

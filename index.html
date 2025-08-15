@@ -1,489 +1,465 @@
-import React, { useState, useEffect } from ‘react’;
-import { Play, Pause, RotateCcw, CheckCircle, ChevronRight, Sun, Brain, Lightbulb, Heart, Star } from ‘lucide-react’;
+<!DOCTYPE html>
 
-const MorningRitualApp = () => {
-const [currentPhase, setCurrentPhase] = useState(0);
-const [currentStep, setCurrentStep] = useState(0);
-const [timer, setTimer] = useState(0);
-const [isActive, setIsActive] = useState(false);
-const [phaseCompleted, setPhaseCompleted] = useState([false, false, false, false, false]);
-const [dailyIntentions, setDailyIntentions] = useState({
-vision: ‘’,
-priorities: [’’, ‘’, ‘’],
-keyIdea: ‘’,
-emotionalLevel: 5,
-intention: ‘’
-});
-
-const phases = [
-{
-title: “Conexión”,
-icon: <Sun className="w-4 h-4 sm:w-6 sm:h-6" />,
-duration: 7,
-color: “bg-orange-500”,
-steps: [
-{
-title: “Respiración 4-7-8”,
-duration: 180,
-instruction: “Encuentra tu centro para manejar la intensidad emocional del día.”,
-guidance: “Inhala 4 segundos, sostén 7, exhala 8. Tu naturaleza intensa (Luna-Plutón) necesita este anclaje.”,
-affirmation: “Mi respiración me conecta con mi centro de calma”
-},
-{
-title: “Afirmación de Propósito”,
-duration: 120,
-instruction: “Establece tu mentalidad antiparálisis para el día.”,
-guidance: “Tu Maximizer puede llevarte al perfeccionismo paralizante. Esta afirmación programa tu mente para la acción.”,
-affirmation: “Hoy elijo claridad sobre complejidad, progreso sobre perfección”
-}
-]
-},
-{
-title: “Claridad Mental”,
-icon: <Brain className="w-4 h-4 sm:w-6 sm:h-6" />,
-duration: 10,
-color: “bg-blue-500”,
-steps: [
-{
-title: “Nivel Estratégico”,
-duration: 120,
-instruction: “Define tu Norte para evitar dispersión.”,
-guidance: “Tu Strategic necesita esta visión macro antes de los detalles.”,
-questions: [
-“¿Qué quiero que sea diferente al final de hoy?”,
-“¿Cómo contribuye este día a mi visión más grande?”
-],
-input: “vision”
-},
-{
-title: “Pregunta Clave del Día”,
-duration: 120,
-instruction: “Tu pregunta de enfoque extremo.”,
-guidance: “Esta pregunta combate tu tendencia a la dispersión mental (Ideation + Strategic).”,
-mainQuestion: “¿Qué es lo MÁS IMPORTANTE que debe suceder hoy para mover la aguja?”
-}
-]
-},
-{
-title: “Ideas”,
-icon: <Lightbulb className="w-4 h-4 sm:w-6 sm:h-6" />,
-duration: 7,
-color: “bg-yellow-500”,
-steps: [
-{
-title: “Brain Dump”,
-duration: 180,
-instruction: “Vacía tu mente para crear espacio mental limpio.”,
-guidance: “Tu Ideation genera conexiones constantes que pueden abrumar.”,
-affirmation: “Libero mi mente para crear con claridad”
-},
-{
-title: “Traducción Simple”,
-duration: 120,
-instruction: “Convierte complejidad en claridad comunicable.”,
-guidance: “Ideation + Strategic generan ideas complejas que otros no pueden seguir.”,
-mainQuestion: “Si tuviera que explicar mi idea más importante a un niño de 10 años, ¿cómo la diría?”,
-input: “keyIdea”
-}
-]
-},
-{
-title: “Intención Emocional”,
-icon: <Heart className="w-4 h-4 sm:w-6 sm:h-6" />,
-duration: 5,
-color: “bg-red-500”,
-steps: [
-{
-title: “Termómetro de Intensidad”,
-duration: 60,
-instruction: “Calibra tu energía emocional para el día.”,
-guidance: “Tu Venus en Escorpio puede llevarte a extremos emocionales.”,
-scale: “1-3: Baja energía | 4-6: Zona óptima | 7-10: Alta intensidad”,
-input: “emotionalLevel”
-},
-{
-title: “Intención Relacional”,
-duration: 60,
-instruction: “Programa tu manera de conectar con otros hoy.”,
-guidance: “Tu Relator + Venus en Escorpio crean conexiones intensas.”,
-defaultIntention: “Hoy seré presente con mi equipo, escuchando antes de proponer”,
-input: “intention”
-}
-]
-},
-{
-title: “Activación”,
-icon: <Star className="w-4 h-4 sm:w-6 sm:h-6" />,
-duration: 3,
-color: “bg-purple-500”,
-steps: [
-{
-title: “Visualización de Impacto”,
-duration: 90,
-instruction: “Conecta con tu propósito más profundo.”,
-guidance: “Tu Nodo Norte en Tauro Casa 6 te pide crear valor tangible y servir a otros.”,
-visualization: [
-“Te ves al final del día, sonriendo por el valor tangible que creaste”,
-“Tu equipo se siente inspirado y claro gracias a tu liderazgo”
-]
-},
-{
-title: “Declaración de Poder”,
-duration: 90,
-instruction: “Programa tu identidad de líder para el día.”,
-guidance: “Esta declaración activa tu Self-Assurance y conecta con tu misión más profunda.”,
-mainDeclaration: “Soy un líder que transforma visiones en realidades”
-}
-]
-}
-];
-
-useEffect(() => {
-let interval = null;
-if (isActive && timer > 0) {
-interval = setInterval(() => {
-setTimer(timer => timer - 1);
-}, 1000);
-} else if (timer === 0 && isActive) {
-const currentPhaseData = phases[currentPhase];
-if (currentStep < currentPhaseData.steps.length - 1) {
-setCurrentStep(currentStep + 1);
-setTimer(currentPhaseData.steps[currentStep + 1].duration);
-} else {
-const newCompleted = […phaseCompleted];
-newCompleted[currentPhase] = true;
-setPhaseCompleted(newCompleted);
-setIsActive(false);
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ritual Matutino">
+    <title>Ritual Matutino - El Equilibrio del Arquitecto Visionario</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
 
 ```
-    if (currentPhase < phases.length - 1) {
-      setTimeout(() => {
-        setCurrentPhase(currentPhase + 1);
-        setCurrentStep(0);
-      }, 1000);
-    }
-  }
-}
-return () => clearInterval(interval);
-```
+<script type="text/babel">
+    const { useState, useEffect } = React;
+    const { Play, Pause, RotateCcw, CheckCircle, Sun, Brain, Lightbulb, Heart, Star } = lucide;
 
-}, [isActive, timer, currentPhase, currentStep, phases]);
+    function RitualApp() {
+        const [currentPhase, setCurrentPhase] = useState(0);
+        const [currentStep, setCurrentStep] = useState(0);
+        const [timer, setTimer] = useState(0);
+        const [isActive, setIsActive] = useState(false);
+        const [completed, setCompleted] = useState([false, false, false, false, false]);
+        const [intentions, setIntentions] = useState({
+            vision: '',
+            keyIdea: '',
+            emotionalLevel: 5,
+            intention: ''
+        });
 
-const startTimer = () => {
-if (timer === 0) {
-setTimer(phases[currentPhase].steps[currentStep].duration);
-}
-setIsActive(true);
-};
+        const phases = [
+            {
+                title: "Conexión",
+                icon: Sun,
+                color: "bg-orange-500",
+                steps: [
+                    {
+                        title: "Respiración 4-7-8",
+                        duration: 180,
+                        text: "Inhala 4 segundos, sostén 7, exhala 8. Tu naturaleza intensa (Luna-Plutón) necesita este anclaje.",
+                        guidance: "Con cada exhalación, liberas la tensión acumulada. Repite 3 ciclos completos."
+                    },
+                    {
+                        title: "Afirmación de Propósito",
+                        duration: 120,
+                        text: "Tu Maximizer puede llevarte al perfeccionismo paralizante. Esta afirmación programa tu mente para la acción.",
+                        affirmation: "Hoy elijo claridad sobre complejidad, progreso sobre perfección"
+                    }
+                ]
+            },
+            {
+                title: "Claridad",
+                icon: Brain,
+                color: "bg-blue-500",
+                steps: [
+                    {
+                        title: "Nivel Estratégico",
+                        duration: 120,
+                        text: "Tu Strategic necesita esta visión macro antes de los detalles.",
+                        question: "¿Qué quiero que sea diferente al final de hoy?",
+                        input: "vision"
+                    },
+                    {
+                        title: "Pregunta Clave del Día",
+                        duration: 180,
+                        text: "Esta pregunta combate tu tendencia a la dispersión mental (Ideation + Strategic).",
+                        question: "¿Qué es lo MÁS IMPORTANTE que debe suceder hoy para mover la aguja?"
+                    }
+                ]
+            },
+            {
+                title: "Ideas",
+                icon: Lightbulb,
+                color: "bg-yellow-500",
+                steps: [
+                    {
+                        title: "Brain Dump",
+                        duration: 180,
+                        text: "Tu Ideation genera conexiones constantes que pueden abrumar. Este ejercicio libera RAM mental.",
+                        guidance: "¿Qué ideas rondan mi cabeza desde ayer? ¿Qué preocupaciones consumen energía mental?"
+                    },
+                    {
+                        title: "Traducción Simple",
+                        duration: 120,
+                        text: "Ideation + Strategic generan ideas complejas que otros no pueden seguir. Practica la simplicidad radical.",
+                        question: "Si tuviera que explicar mi idea más importante a un niño de 10 años, ¿cómo la diría?",
+                        input: "keyIdea"
+                    }
+                ]
+            },
+            {
+                title: "Emocional",
+                icon: Heart,
+                color: "bg-red-500",
+                steps: [
+                    {
+                        title: "Termómetro de Intensidad",
+                        duration: 60,
+                        text: "Tu Venus en Escorpio puede llevarte a extremos emocionales. Este check-in te ayuda a modular tu intensidad.",
+                        scale: "1-3: Baja energía | 4-6: Zona óptima | 7-10: Alta intensidad",
+                        input: "emotionalLevel"
+                    },
+                    {
+                        title: "Intención Relacional",
+                        duration: 120,
+                        text: "Tu Relator + Venus en Escorpio crean conexiones intensas. Define cómo quieres mostrar up en las relaciones hoy.",
+                        question: "¿Qué energía quiero que otros sientan cuando interactúan conmigo?",
+                        input: "intention"
+                    }
+                ]
+            },
+            {
+                title: "Activación",
+                icon: Star,
+                color: "bg-purple-500",
+                steps: [
+                    {
+                        title: "Visualización de Impacto",
+                        duration: 90,
+                        text: "Tu Nodo Norte en Tauro Casa 6 te pide crear valor tangible y servir a otros.",
+                        visualization: "Te ves al final del día, sonriendo por el valor tangible que creaste. Tu equipo se siente inspirado y claro gracias a tu liderazgo."
+                    },
+                    {
+                        title: "Declaración de Poder",
+                        duration: 90,
+                        text: "Esta declaración activa tu Self-Assurance y conecta con tu misión más profunda. Dilo con convicción total.",
+                        declaration: "Soy un líder que transforma visiones en realidades"
+                    }
+                ]
+            }
+        ];
 
-const pauseTimer = () => {
-setIsActive(false);
-};
+        useEffect(() => {
+            let interval = null;
+            if (isActive && timer > 0) {
+                interval = setInterval(() => {
+                    setTimer(timer => timer - 1);
+                }, 1000);
+            } else if (timer === 0 && isActive) {
+                setIsActive(false);
+                const newCompleted = [...completed];
+                newCompleted[currentPhase] = true;
+                setCompleted(newCompleted);
+            }
+            return () => clearInterval(interval);
+        }, [isActive, timer, currentPhase, completed]);
 
-const resetTimer = () => {
-setIsActive(false);
-setTimer(phases[currentPhase].steps[currentStep].duration);
-};
+        const startTimer = () => {
+            if (timer === 0) {
+                setTimer(phases[currentPhase].steps[currentStep].duration);
+            }
+            setIsActive(true);
+        };
 
-const formatTime = (seconds) => {
-const mins = Math.floor(seconds / 60);
-const secs = seconds % 60;
-return `${mins}:${secs.toString().padStart(2, '0')}`;
-};
+        const pauseTimer = () => setIsActive(false);
+        const resetTimer = () => {
+            setIsActive(false);
+            setTimer(phases[currentPhase].steps[currentStep].duration);
+        };
 
-const goToPhase = (phaseIndex) => {
-setCurrentPhase(phaseIndex);
-setCurrentStep(0);
-setIsActive(false);
-setTimer(0);
-};
+        const formatTime = (seconds) => {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        };
 
-const goToNextStep = () => {
-const currentPhaseData = phases[currentPhase];
-if (currentStep < currentPhaseData.steps.length - 1) {
-setCurrentStep(currentStep + 1);
-setTimer(0);
-setIsActive(false);
-}
-};
+        const nextStep = () => {
+            if (currentStep < phases[currentPhase].steps.length - 1) {
+                setCurrentStep(currentStep + 1);
+            } else if (currentPhase < phases.length - 1) {
+                setCurrentPhase(currentPhase + 1);
+                setCurrentStep(0);
+            }
+            setTimer(0);
+            setIsActive(false);
+        };
 
-const handleInputChange = (field, value, index = null) => {
-if (field === ‘priorities’ && index !== null) {
-const newPriorities = […dailyIntentions.priorities];
-newPriorities[index] = value;
-setDailyIntentions({…dailyIntentions, priorities: newPriorities});
-} else {
-setDailyIntentions({…dailyIntentions, [field]: value});
-}
-};
+        const goToPhase = (index) => {
+            setCurrentPhase(index);
+            setCurrentStep(0);
+            setTimer(0);
+            setIsActive(false);
+        };
 
-const completedPhases = phaseCompleted.filter(Boolean).length;
-const progress = (completedPhases / phases.length) * 100;
+        const handleInputChange = (field, value) => {
+            setIntentions({...intentions, [field]: value});
+        };
 
-return (
-<div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 text-white">
-<div className="container mx-auto p-3 sm:p-6 max-w-4xl">
-<div className="text-center mb-6 sm:mb-8">
-<h1 className="text-2xl sm:text-3xl font-bold mb-2">El Equilibrio del Arquitecto Visionario</h1>
-<p className="text-lg sm:text-xl opacity-80">Tu Ritual Matutino Personalizado</p>
-<div className="mt-4">
-<div className="bg-white/20 rounded-full h-4 w-full max-w-md mx-auto">
-<div
-className=“bg-gradient-to-r from-yellow-400 to-orange-500 h-4 rounded-full transition-all duration-500”
-style={{width: `${progress}%`}}
-></div>
-</div>
-<p className="mt-2 text-sm opacity-70">{completedPhases}/5 fases completadas</p>
-</div>
-</div>
+        const IconComponent = phases[currentPhase].icon;
+        const completedCount = completed.filter(Boolean).length;
+        const currentStepData = phases[currentPhase].steps[currentStep];
 
-```
-    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-6 sm:mb-8">
-      {phases.map((phase, index) => (
-        <button
-          key={index}
-          onClick={() => goToPhase(index)}
-          className={`p-2 sm:p-3 rounded-lg text-center transition-all duration-200 ${
-            currentPhase === index 
-              ? `${phase.color} shadow-lg scale-105` 
-              : phaseCompleted[index]
-                ? 'bg-green-600/50 hover:bg-green-600/70'
-                : 'bg-white/10 hover:bg-white/20'
-          }`}
-        >
-          <div className="flex justify-center mb-1">
-            {phaseCompleted[index] ? <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" /> : phase.icon}
-          </div>
-          <div className="text-xs font-medium">{phase.title}</div>
-          <div className="text-xs opacity-70">{phase.duration}min</div>
-        </button>
-      ))}
-    </div>
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 text-white">
+                <div className="container mx-auto p-3 sm:p-6 max-w-4xl">
+                    {/* Header */}
+                    <div className="text-center mb-6 sm:mb-8">
+                        <h1 className="text-2xl sm:text-3xl font-bold mb-2">El Equilibrio del Arquitecto Visionario</h1>
+                        <p className="text-lg sm:text-xl opacity-80">Tu Ritual Matutino Personalizado</p>
+                        <div className="mt-4">
+                            <div className="bg-white/20 rounded-full h-4 w-full max-w-md mx-auto">
+                                <div 
+                                    className="bg-gradient-to-r from-yellow-400 to-orange-500 h-4 rounded-full transition-all duration-500"
+                                    style={{width: `${(completedCount / phases.length) * 100}%`}}
+                                />
+                            </div>
+                            <p className="mt-2 text-sm opacity-70">{completedCount}/5 fases completadas</p>
+                        </div>
+                    </div>
 
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-8 mb-4 sm:mb-6">
-      <div className="flex items-center mb-4 sm:mb-6">
-        <div className={`p-2 sm:p-3 rounded-full ${phases[currentPhase].color} mr-3 sm:mr-4`}>
-          {phases[currentPhase].icon}
-        </div>
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold">{phases[currentPhase].title}</h2>
-          <p className="opacity-70">Fase {currentPhase + 1} de 5</p>
-        </div>
-      </div>
+                    {/* Phase Navigation */}
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-6 sm:mb-8">
+                        {phases.map((phase, index) => {
+                            const PhaseIcon = phase.icon;
+                            return (
+                                <button
+                                    key={index}
+                                    onClick={() => goToPhase(index)}
+                                    className={`p-2 sm:p-3 rounded-lg text-center transition-all duration-200 ${
+                                        currentPhase === index 
+                                            ? `${phase.color} shadow-lg scale-105` 
+                                            : completed[index]
+                                                ? 'bg-green-600/50 hover:bg-green-600/70'
+                                                : 'bg-white/10 hover:bg-white/20'
+                                    }`}
+                                >
+                                    <div className="flex justify-center mb-1">
+                                        {completed[index] ? (
+                                            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                                        ) : (
+                                            <PhaseIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                                        )}
+                                    </div>
+                                    <div className="text-xs font-medium">{phase.title}</div>
+                                </button>
+                            );
+                        })}
+                    </div>
 
-      <div className="bg-white/5 rounded-xl p-4 sm:p-6">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
-          <h3 className="text-lg sm:text-xl font-semibold">
-            {phases[currentPhase].steps[currentStep].title}
-          </h3>
-          <div className="text-2xl sm:text-3xl font-mono text-center sm:text-right">
-            {formatTime(timer || phases[currentPhase].steps[currentStep].duration)}
-          </div>
-        </div>
+                    {/* Current Phase */}
+                    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-8 mb-4 sm:mb-6">
+                        <div className="flex items-center mb-4 sm:mb-6">
+                            <div className={`p-2 sm:p-3 rounded-full ${phases[currentPhase].color} mr-3 sm:mr-4`}>
+                                <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </div>
+                            <div>
+                                <h2 className="text-xl sm:text-2xl font-bold">{phases[currentPhase].title}</h2>
+                                <p className="opacity-70">Fase {currentPhase + 1} de 5</p>
+                            </div>
+                        </div>
 
-        <div className="mb-4 sm:mb-6">
-          <p className="text-base sm:text-lg mb-4 opacity-90">
-            {phases[currentPhase].steps[currentStep].instruction}
-          </p>
-          
-          {phases[currentPhase].steps[currentStep].guidance && (
-            <div className="bg-white/5 rounded-lg p-4 mb-4">
-              <h5 className="font-semibold text-yellow-300 mb-2">💡 Contexto Personal:</h5>
-              <p className="text-sm opacity-80">{phases[currentPhase].steps[currentStep].guidance}</p>
-            </div>
-          )}
+                        {/* Current Step */}
+                        <div className="bg-white/5 rounded-xl p-4 sm:p-6">
+                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
+                                <h3 className="text-lg sm:text-xl font-semibold">
+                                    {currentStepData.title}
+                                </h3>
+                                <div className="text-2xl sm:text-3xl font-mono text-center sm:text-right">
+                                    {formatTime(timer || currentStepData.duration)}
+                                </div>
+                            </div>
 
-          {phases[currentPhase].steps[currentStep].mainQuestion && (
-            <div className="bg-blue-500/20 rounded-lg p-4 mb-4">
-              <h5 className="font-semibold text-blue-300 mb-2">🎯 Pregunta Clave:</h5>
-              <p className="text-lg font-medium">{phases[currentPhase].steps[currentStep].mainQuestion}</p>
-            </div>
-          )}
+                            <div className="mb-4 sm:mb-6">
+                                <p className="text-base sm:text-lg mb-4 opacity-90">
+                                    {currentStepData.text}
+                                </p>
 
-          {phases[currentPhase].steps[currentStep].questions && (
-            <div className="bg-white/5 rounded-lg p-4 mb-4">
-              <h5 className="font-semibold text-green-300 mb-2">🤔 Preguntas Guía:</h5>
-              <ul className="space-y-1 text-sm">
-                {phases[currentPhase].steps[currentStep].questions.map((q, i) => (
-                  <li key={i} className="opacity-80">• {q}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+                                {currentStepData.guidance && (
+                                    <div className="bg-white/5 rounded-lg p-4 mb-4">
+                                        <h5 className="font-semibold text-yellow-300 mb-2">💡 Contexto:</h5>
+                                        <p className="text-sm opacity-80">{currentStepData.guidance}</p>
+                                    </div>
+                                )}
 
-          {phases[currentPhase].steps[currentStep].affirmation && (
-            <div className="bg-purple-500/20 rounded-lg p-4 mb-4">
-              <h5 className="font-semibold text-purple-300 mb-2">✨ Afirmación:</h5>
-              <p className="text-lg font-medium italic">"{phases[currentPhase].steps[currentStep].affirmation}"</p>
-            </div>
-          )}
+                                {currentStepData.question && (
+                                    <div className="bg-blue-500/20 rounded-lg p-4 mb-4">
+                                        <h5 className="font-semibold text-blue-300 mb-2">🎯 Pregunta Clave:</h5>
+                                        <p className="text-lg font-medium">{currentStepData.question}</p>
+                                    </div>
+                                )}
 
-          {phases[currentPhase].steps[currentStep].scale && (
-            <div className="bg-white/5 rounded-lg p-4 mb-4">
-              <h5 className="font-semibold text-indigo-300 mb-2">📊 Interpretación:</h5>
-              <p className="text-sm opacity-80">{phases[currentPhase].steps[currentStep].scale}</p>
-            </div>
-          )}
+                                {currentStepData.affirmation && (
+                                    <div className="bg-purple-500/20 rounded-lg p-4 mb-4">
+                                        <h5 className="font-semibold text-purple-300 mb-2">✨ Afirmación:</h5>
+                                        <p className="text-lg font-medium italic">"{currentStepData.affirmation}"</p>
+                                    </div>
+                                )}
 
-          {phases[currentPhase].steps[currentStep].visualization && (
-            <div className="bg-white/5 rounded-lg p-4 mb-4">
-              <h5 className="font-semibold text-purple-300 mb-2">🎬 Visualización:</h5>
-              <ul className="space-y-1 text-sm">
-                {phases[currentPhase].steps[currentStep].visualization.map((step, i) => (
-                  <li key={i} className="opacity-80">• {step}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+                                {currentStepData.declaration && (
+                                    <div className="bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-lg p-4 mb-4">
+                                        <h5 className="font-semibold text-purple-300 mb-2">👑 Declaración:</h5>
+                                        <p className="text-lg sm:text-xl font-bold italic text-center">"{currentStepData.declaration}"</p>
+                                    </div>
+                                )}
 
-          {phases[currentPhase].steps[currentStep].defaultIntention && (
-            <div className="bg-green-500/20 rounded-lg p-4 mb-4">
-              <h5 className="font-semibold text-green-300 mb-2">💫 Intención Sugerida:</h5>
-              <p className="text-lg font-medium italic">"{phases[currentPhase].steps[currentStep].defaultIntention}"</p>
-            </div>
-          )}
+                                {currentStepData.visualization && (
+                                    <div className="bg-white/5 rounded-lg p-4 mb-4">
+                                        <h5 className="font-semibold text-purple-300 mb-2">🎬 Visualización:</h5>
+                                        <p className="text-sm opacity-80">{currentStepData.visualization}</p>
+                                    </div>
+                                )}
 
-          {phases[currentPhase].steps[currentStep].mainDeclaration && (
-            <div className="bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-lg p-4 mb-4">
-              <h5 className="font-semibold text-purple-300 mb-2">👑 Declaración:</h5>
-              <p className="text-lg sm:text-xl font-bold italic text-center">"{phases[currentPhase].steps[currentStep].mainDeclaration}"</p>
-            </div>
-          )}
-        </div>
+                                {currentStepData.scale && (
+                                    <div className="bg-white/5 rounded-lg p-4 mb-4">
+                                        <h5 className="font-semibold text-indigo-300 mb-2">📊 Interpretación:</h5>
+                                        <p className="text-sm opacity-80">{currentStepData.scale}</p>
+                                    </div>
+                                )}
+                            </div>
 
-        {phases[currentPhase].steps[currentStep].input && (
-          <div className="mb-6">
-            {phases[currentPhase].steps[currentStep].input === 'vision' && (
-              <textarea
-                placeholder="Escribe tu visión del día..."
-                className="w-full p-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50"
-                value={dailyIntentions.vision}
-                onChange={(e) => handleInputChange('vision', e.target.value)}
-              />
-            )}
+                            {/* Input Fields */}
+                            {currentStepData.input && (
+                                <div className="mb-6">
+                                    {currentStepData.input === 'vision' && (
+                                        <textarea
+                                            placeholder="Escribe tu visión del día..."
+                                            className="w-full p-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50"
+                                            value={intentions.vision}
+                                            onChange={(e) => handleInputChange('vision', e.target.value)}
+                                        />
+                                    )}
 
-            {phases[currentPhase].steps[currentStep].input === 'keyIdea' && (
-              <textarea
-                placeholder="Tu idea en lenguaje simple..."
-                className="w-full p-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50"
-                value={dailyIntentions.keyIdea}
-                onChange={(e) => handleInputChange('keyIdea', e.target.value)}
-              />
-            )}
+                                    {currentStepData.input === 'keyIdea' && (
+                                        <textarea
+                                            placeholder="Tu idea en lenguaje simple..."
+                                            className="w-full p-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50"
+                                            value={intentions.keyIdea}
+                                            onChange={(e) => handleInputChange('keyIdea', e.target.value)}
+                                        />
+                                    )}
 
-            {phases[currentPhase].steps[currentStep].input === 'emotionalLevel' && (
-              <div className="flex items-center space-x-4">
-                <span>Bajo (1)</span>
-                <input
-                  type="range"
-                  min="1"
-                  max="10"
-                  className="flex-1"
-                  value={dailyIntentions.emotionalLevel}
-                  onChange={(e) => handleInputChange('emotionalLevel', parseInt(e.target.value))}
-                />
-                <span>Alto (10)</span>
-                <div className="bg-white/20 px-3 py-1 rounded">
-                  {dailyIntentions.emotionalLevel}
+                                    {currentStepData.input === 'emotionalLevel' && (
+                                        <div className="flex items-center space-x-4">
+                                            <span>Bajo (1)</span>
+                                            <input
+                                                type="range"
+                                                min="1"
+                                                max="10"
+                                                className="flex-1"
+                                                value={intentions.emotionalLevel}
+                                                onChange={(e) => handleInputChange('emotionalLevel', parseInt(e.target.value))}
+                                            />
+                                            <span>Alto (10)</span>
+                                            <div className="bg-white/20 px-3 py-1 rounded">
+                                                {intentions.emotionalLevel}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {currentStepData.input === 'intention' && (
+                                        <textarea
+                                            placeholder="Mi intención relacional..."
+                                            className="w-full p-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50"
+                                            value={intentions.intention}
+                                            onChange={(e) => handleInputChange('intention', e.target.value)}
+                                        />
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Timer Controls */}
+                            <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
+                                <button
+                                    onClick={startTimer}
+                                    disabled={isActive}
+                                    className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
+                                >
+                                    <Play className="w-4 h-4 sm:w-5 sm:h-5" />
+                                    <span>Iniciar</span>
+                                </button>
+                                
+                                <button
+                                    onClick={pauseTimer}
+                                    disabled={!isActive}
+                                    className="flex items-center space-x-2 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
+                                >
+                                    <Pause className="w-4 h-4 sm:w-5 sm:h-5" />
+                                    <span>Pausar</span>
+                                </button>
+                                
+                                <button
+                                    onClick={resetTimer}
+                                    className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
+                                >
+                                    <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
+                                    <span>Reset</span>
+                                </button>
+
+                                <button
+                                    onClick={nextStep}
+                                    className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
+                                >
+                                    <span>Siguiente</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Step Progress */}
+                        <div className="mt-6 flex justify-center space-x-2">
+                            {phases[currentPhase].steps.map((_, index) => (
+                                <div
+                                    key={index}
+                                    className={`w-3 h-3 rounded-full transition-colors ${
+                                        index === currentStep 
+                                            ? phases[currentPhase].color 
+                                            : index < currentStep ? 'bg-green-500' : 'bg-white/20'
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Summary */}
+                    {completedCount === phases.length && (
+                        <div className="bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-lg rounded-2xl p-4 sm:p-8">
+                            <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">🎉 ¡Ritual Completado!</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                                <div>
+                                    <h4 className="font-semibold mb-2">Tu Visión del Día:</h4>
+                                    <p className="opacity-80 text-sm sm:text-base">{intentions.vision || 'No definida'}</p>
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold mb-2">Idea Clave:</h4>
+                                    <p className="opacity-80 text-sm sm:text-base">{intentions.keyIdea || 'No definida'}</p>
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold mb-2">Nivel Emocional:</h4>
+                                    <p className="opacity-80 text-sm sm:text-base">{intentions.emotionalLevel}/10</p>
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold mb-2">Intención Relacional:</h4>
+                                    <p className="opacity-80 text-sm sm:text-base">{intentions.intention || 'No definida'}</p>
+                                </div>
+                            </div>
+                            <div className="text-center mt-6">
+                                <p className="text-base sm:text-lg font-semibold">¡Que tengas un día extraordinario, Javier!</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
-              </div>
-            )}
+            </div>
+        );
+    }
 
-            {phases[currentPhase].steps[currentStep].input === 'intention' && (
-              <textarea
-                placeholder="Mi intención relacional..."
-                className="w-full p-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50"
-                value={dailyIntentions.intention}
-                onChange={(e) => handleInputChange('intention', e.target.value)}
-              />
-            )}
-          </div>
-        )}
-
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
-          <button
-            onClick={startTimer}
-            disabled={isActive}
-            className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
-          >
-            <Play className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span>Iniciar</span>
-          </button>
-          
-          <button
-            onClick={pauseTimer}
-            disabled={!isActive}
-            className="flex items-center space-x-2 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
-          >
-            <Pause className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span>Pausar</span>
-          </button>
-          
-          <button
-            onClick={resetTimer}
-            className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
-          >
-            <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span>Reiniciar</span>
-          </button>
-          
-          {currentStep < phases[currentPhase].steps.length - 1 && (
-            <button
-              onClick={goToNextStep}
-              className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base"
-            >
-              <span>Siguiente</span>
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-6 flex justify-center space-x-2">
-        {phases[currentPhase].steps.map((_, index) => (
-          <div
-            key={index}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              index === currentStep ? phases[currentPhase].color 
-              : index < currentStep ? 'bg-green-500' 
-              : 'bg-white/20'
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-
-    {completedPhases === phases.length && (
-      <div className="bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-lg rounded-2xl p-4 sm:p-8">
-        <h3 className="text-xl sm:text-2xl font-bold mb-4 text-center">🎉 ¡Ritual Completado!</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          <div>
-            <h4 className="font-semibold mb-2">Tu Visión del Día:</h4>
-            <p className="opacity-80 text-sm sm:text-base">{dailyIntentions.vision || 'No definida'}</p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Idea Clave:</h4>
-            <p className="opacity-80 text-sm sm:text-base">{dailyIntentions.keyIdea || 'No definida'}</p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Nivel Emocional:</h4>
-            <p className="opacity-80 text-sm sm:text-base">{dailyIntentions.emotionalLevel}/10</p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Intención Relacional:</h4>
-            <p className="opacity-80 text-sm sm:text-base">{dailyIntentions.intention || 'No definida'}</p>
-          </div>
-        </div>
-        <div className="text-center mt-6">
-          <p className="text-base sm:text-lg font-semibold">¡Que tengas un día extraordinario, Javier! 🌟</p>
-        </div>
-      </div>
-    )}
-  </div>
-</div>
+    ReactDOM.render(<RitualApp />, document.getElementById('root'));
+</script>
 ```
 
-);
-};
-
-export default MorningRitualApp;
+</body>
+</html>
